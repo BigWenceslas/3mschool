@@ -97,8 +97,10 @@ courseSchema.pre(/^find/, function() {
   this.updateMany(
     { 
       status: 'planned',
-      date: { $lte: now },
-      $expr: { $gt: [{ $add: ['$date', { $multiply: ['$duration', 60000] }] }, now] }
+      $and: [
+        { date: { $lte: now } },
+        { $expr: { $gt: [{ $add: ['$date', { $multiply: ['$duration', 60000] }] }, now] } }
+      ]
     },
     { status: 'ongoing' }
   )
@@ -106,8 +108,10 @@ courseSchema.pre(/^find/, function() {
   // Mettre à jour les cours en cours ou planifiés qui sont maintenant terminés  
   this.updateMany(
     { 
-      status: { $in: ['planned', 'ongoing'] },
-      $expr: { $lte: [{ $add: ['$date', { $multiply: ['$duration', 60000] }] }, now] }
+      $and: [
+        { status: { $in: ['planned', 'ongoing'] } },
+        { $expr: { $lte: [{ $add: ['$date', { $multiply: ['$duration', 60000] }] }, now] } }
+      ]
     },
     { status: 'completed' }
   )
