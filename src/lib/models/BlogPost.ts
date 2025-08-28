@@ -1,4 +1,8 @@
 import mongoose from 'mongoose'
+// Updated to use 'name' field from User model
+
+// Import BlogComment to ensure schema registration
+import './BlogComment'
 
 export interface IBlogPost extends mongoose.Document {
   title: string
@@ -50,7 +54,6 @@ const blogPostSchema = new mongoose.Schema<IBlogPost>(
     slug: {
       type: String,
       required: [true, 'Le slug est requis'],
-      unique: true,
       lowercase: true,
       trim: true,
       match: [/^[a-z0-9-]+$/, 'Le slug ne peut contenir que des lettres minuscules, des chiffres et des tirets']

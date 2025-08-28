@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { connectMongoDB } from '@/lib/mongodb'
 import BlogPost from '@/lib/models/BlogPost'
+import BlogComment from '@/lib/models/BlogComment'
 import User from '@/lib/models/User'
 import { requireAuth } from '@/lib/auth'
 import { requireCSRF } from '@/lib/csrf'
@@ -13,6 +14,9 @@ export async function GET(
   try {
     await connectMongoDB()
     
+    // Ensure BlogComment model is registered
+    BlogComment
+    
     const { searchParams } = new URL(request.url)
     const includeUnpublished = searchParams.get('includeUnpublished') === 'true'
     
@@ -24,13 +28,13 @@ export async function GET(
     }
 
     const post = await BlogPost.findOne(query)
-      .populate('author', 'firstName lastName email')
+      .populate('author', 'name email')
       .populate({
         path: 'comments',
         match: { status: 'approved' },
         populate: { 
           path: 'author', 
-          select: 'firstName lastName'
+          select: 'name'
         },
         options: { sort: { createdAt: -1 } }
       })
@@ -92,7 +96,7 @@ export async function PUT(
     if (featuredImage !== undefined) post.featuredImage = featuredImage
 
     await post.save()
-    await post.populate('author', 'firstName lastName email')
+    await post.populate('author', 'name email')
 
     return NextResponse.json({ 
       message: 'Article mis à jour avec succès',

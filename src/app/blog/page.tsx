@@ -9,8 +9,7 @@ interface BlogPost {
   title: string
   excerpt: string
   author: {
-    firstName: string
-    lastName: string
+    name: string
   }
   slug: string
   tags: string[]
@@ -238,7 +237,7 @@ export default function BlogPage() {
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center">
                         <User size={14} className="mr-1" />
-                        <span>{post.author.firstName} {post.author.lastName}</span>
+                        <span>{post.author.name}</span>
                       </div>
                       <div className="flex items-center">
                         <Clock size={14} className="mr-1" />

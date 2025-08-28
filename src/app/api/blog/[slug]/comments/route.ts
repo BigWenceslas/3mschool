@@ -24,11 +24,11 @@ export async function GET(
       status: 'approved',
       parentComment: null 
     })
-      .populate('author', 'firstName lastName')
+      .populate('author', 'name')
       .populate({
         path: 'replies',
         match: { status: 'approved' },
-        populate: { path: 'author', select: 'firstName lastName' },
+        populate: { path: 'author', select: 'name' },
         options: { sort: { createdAt: 1 } }
       })
       .sort({ createdAt: -1 })
@@ -97,7 +97,7 @@ export async function POST(
     })
 
     await comment.save()
-    await comment.populate('author', 'firstName lastName')
+    await comment.populate('author', 'name')
 
     // Ajouter le commentaire à la liste des commentaires du post
     if (!parentComment) {

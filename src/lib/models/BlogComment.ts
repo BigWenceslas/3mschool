@@ -83,11 +83,11 @@ blogCommentSchema.methods.decrementLikes = function() {
 // Méthode statique pour obtenir les commentaires approuvés d'un post
 blogCommentSchema.statics.getApprovedForPost = function(postId: string) {
   return this.find({ postId, status: 'approved', parentComment: null })
-    .populate('author', 'firstName lastName')
+    .populate('author', 'name')
     .populate({
       path: 'replies',
       match: { status: 'approved' },
-      populate: { path: 'author', select: 'firstName lastName' }
+      populate: { path: 'author', select: 'name' }
     })
     .sort({ createdAt: -1 })
 }
