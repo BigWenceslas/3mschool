@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charte Graphique - Bleu Blanc Violet Jaune Or</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+        
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .color-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .color-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .color-sample {
+            height: 120px;
+            width: 100%;
+        }
+        
+        .color-info {
+            padding: 20px;
+        }
+        
+        .color-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .color-codes {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .combinations {
+            margin-top: 40px;
+        }
+        
+        .combo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .combo-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .combo-example {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .primary-bg { background-color: #1e3a8a; color: white; }
+        .secondary-bg { background-color: #7c3aed; color: white; }
+        .accent-bg { background-color: #fbbf24; color: #1f2937; }
+        .gold-bg { background-color: #f59e0b; color: #1f2937; }
+        .neutral-bg { background-color: #f8fafc; color: #1f2937; border: 1px solid #e5e7eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Charte Graphique</h1>
+        <h2 style="text-align: center; color: #666; margin-bottom: 40px;">Bleu • Blanc • Violet • Jaune • Or</h2>
+        
+        <div class="palette-grid">
+            <div class="color-card">
+                <div class="color-sample" style="background-color: #1e3a8a;"></div>
+                <div class="color-info">
+                    <div class="color-name" style="color: #1e3a8a;">Bleu Principal</div>
+                    <div class="color-codes">
+                        HEX: #1e3a8a<br>
+                        RGB: 30, 58, 138<br>
+                        HSL: 230°, 64%, 33%
+                    </div>
+                </div>
+            </div>
+            
+            <div class="color-card">
+                <div class="color-sample" style="background-color: #f8fafc;"></div>
+                <div class="color-info">
+                    <div class="color-name" style="color: #374151;">Blanc Neutre</div>
+                    <div class="color-codes">
+                        HEX: #f8fafc<br>
+                        RGB: 248, 250, 252<br>
+                        HSL: 210°, 20%, 98%
+                    </div>
+                </div>
+            </div>
+            
+            <div class="color-card">
+                <div class="color-sample" style="background-color: #7c3aed;"></div>
+                <div class="color-info">
+                    <div class="color-name" style="color: #7c3aed;">Violet Secondaire</div>
+                    <div class="color-codes">
+                        HEX: #7c3aed<br>
+                        RGB: 124, 58, 237<br>
+                        HSL: 262°, 83%, 58%
+                    </div>
+                </div>
+            </div>
+            
+            <div class="color-card">
+                <div class="color-sample" style="background-color: #fbbf24;"></div>
+                <div class="color-info">
+                    <div class="color-name" style="color: #d97706;">Jaune Accent</div>
+                    <div class="color-codes">
+                        HEX: #fbbf24<br>
+                        RGB: 251, 191, 36<br>
+                        HSL: 43°, 96%, 56%
+                    </div>
+                </div>
+            </div>
+            
+            <div class="color-card">
+                <div class="color-sample" style="background-color: #f59e0b;"></div>
+                <div class="color-info">
+                    <div class="color-name" style="color: #d97706;">Or Premium</div>
+                    <div class="color-codes">
+                        HEX: #f59e0b<br>
+                        RGB: 245, 158, 11<br>
+                        HSL: 38°, 92%, 50%
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="combinations">
+            <div class="combo-section">
+                <h3 class="combo-title">Combinaisons Recommandées</h3>
+                
+                <div class="combo-example primary-bg">
+                    <strong>Bleu Principal + Blanc:</strong> Idéal pour les titres et éléments principaux
+                </div>
+                
+                <div class="combo-example secondary-bg">
+                    <strong>Violet + Blanc:</strong> Parfait pour les éléments secondaires et call-to-action
+                </div>
+                
+                <div class="combo-example accent-bg">
+                    <strong>Jaune + Bleu:</strong> Excellent pour attirer l'attention et les boutons
+                </div>
+                
+                <div class="combo-example gold-bg">
+                    <strong>Or + Bleu:</strong> Combinaison premium pour les éléments de luxe
+                </div>
+                
+                <div class="combo-example neutral-bg">
+                    <strong>Blanc + Bleu:</strong> Base neutre pour le contenu principal
+                </div>
+            </div>
+            
+            <div class="combo-section">
+                <h3 class="combo-title">Usage Recommandé</h3>
+                <ul style="line-height: 1.8;">
+                    <li><strong>Bleu Principal (#1e3a8a):</strong> Logo, titres principaux, navigation</li>
+                    <li><strong>Blanc Neutre (#f8fafc):</strong> Arrière-plans, texte sur fonds colorés</li>
+                    <li><strong>Violet Secondaire (#7c3aed):</strong> Boutons secondaires, liens, accents</li>
+                    <li><strong>Jaune Accent (#fbbf24):</strong> Call-to-action, alertes, éléments d'attention</li>
+                    <li><strong>Or Premium (#f59e0b):</strong> Éléments premium, prix, badges</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
