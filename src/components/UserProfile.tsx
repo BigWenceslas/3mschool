@@ -6,7 +6,6 @@ import { fetchWithCSRF } from '@/lib/use-csrf'
 
 interface UserData {
   _id: string
-  name: string
   email: string
   firstName: string
   lastName: string
@@ -161,7 +160,7 @@ export default function UserProfile() {
       <div className="bg-white rounded-2xl p-6 shadow-lg">
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-            {user.firstName?.[0]?.toUpperCase() || user.name?.[0]?.toUpperCase() || 'U'}
+            {user.firstName?.[0]?.toUpperCase() || 'U'}
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Mon Profil</h1>

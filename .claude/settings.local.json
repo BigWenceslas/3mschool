@@ -19,7 +19,8 @@
       "Bash(curl:*)",
       "Bash(sudo apt:*)",
       "Bash(sudo apt install:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebFetch(domain:3mschool.vercel.app)"
     ],
     "deny": [],
     "ask": []

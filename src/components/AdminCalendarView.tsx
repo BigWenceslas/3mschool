@@ -272,7 +272,7 @@ export default function AdminCalendarView() {
                 <p><strong>Lieu:</strong> {selectedCourse.location}</p>
                 <p><strong>Prix:</strong> {selectedCourse.price.toLocaleString()} XAF</p>
                 <p><strong>Places max:</strong> {selectedCourse.maxParticipants}</p>
-                <p><strong>Instructeur:</strong> {selectedCourse.instructor.firstName} {selectedCourse.instructor.lastName}</p>
+                <p><strong>Instructeur:</strong> {selectedCourse.instructor?.firstName || ''} {selectedCourse.instructor?.lastName || ''}</p>
               </div>
               
               {selectedCourse.description && (

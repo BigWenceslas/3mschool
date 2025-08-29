@@ -138,7 +138,7 @@ export default function MemberDashboard({
           </div>
           <div>
             <h1 className="text-2xl font-bold">
-              Bienvenue, {user.firstName} {user.lastName}
+              Bienvenue, {user?.firstName || ''} {user?.lastName || ''}
             </h1>
             <p className="opacity-90">{user.email}</p>
           </div>
@@ -342,7 +342,7 @@ export default function MemberDashboard({
                             <div className="flex items-center space-x-2">
                               <User size={14} />
                               <span>
-                                {enrollment.courseId.instructor.firstName} {enrollment.courseId.instructor.lastName}
+                                {enrollment.courseId.instructor?.firstName || ''} {enrollment.courseId.instructor?.lastName || ''}
                               </span>
                             </div>
                           </div>

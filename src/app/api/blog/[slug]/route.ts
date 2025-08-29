@@ -28,13 +28,13 @@ export async function GET(
     }
 
     const post = await BlogPost.findOne(query)
-      .populate('author', 'name email')
+      .populate('author', 'firstName lastName email')
       .populate({
         path: 'comments',
         match: { status: 'approved' },
         populate: { 
           path: 'author', 
-          select: 'name'
+          select: 'firstName lastName'
         },
         options: { sort: { createdAt: -1 } }
       })
@@ -96,7 +96,7 @@ export async function PUT(
     if (featuredImage !== undefined) post.featuredImage = featuredImage
 
     await post.save()
-    await post.populate('author', 'name email')
+    await post.populate('author', 'firstName lastName email')
 
     return NextResponse.json({ 
       message: 'Article mis à jour avec succès',

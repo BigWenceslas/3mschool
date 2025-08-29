@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
         // Filtre de recherche
         if (search) {
           const searchLower = search.toLowerCase()
-          const userName = user.name?.toLowerCase() || ''
+          const userName = `${user.firstName || ''} ${user.lastName || ''}`.toLowerCase().trim() || ''
           const userEmail = user.email?.toLowerCase() || ''
           const courseTitle = course?.title?.toLowerCase() || ''
           const courseName = course?.name?.toLowerCase() || ''
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
           courseTitle: course?.title,
           courseName: course?.name,
           description: `Cours: ${course?.title || course?.name || 'Cours supprimé'}`,
-          userName: user.name || '',
+          userName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || '',
           userEmail: user.email || '',
           createdAt: enrollment.createdAt
         })
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
         // Filtre de recherche
         if (search) {
           const searchLower = search.toLowerCase()
-          const userName = user.name?.toLowerCase() || ''
+          const userName = `${user.firstName || ''} ${user.lastName || ''}`.toLowerCase().trim() || ''
           const userEmail = user.email?.toLowerCase() || ''
           const year = registration.year?.toString() || ''
           
@@ -166,7 +166,7 @@ export async function GET(request: NextRequest) {
           date: registration.paymentDate || registration.createdAt,
           year: registration.year,
           description: `Inscription annuelle ${registration.year}`,
-          userName: user.name || '',
+          userName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || '',
           userEmail: user.email || '',
           createdAt: registration.createdAt
         })

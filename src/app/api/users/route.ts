@@ -23,7 +23,8 @@ export async function GET(request: NextRequest) {
     const query = search 
       ? { 
           $or: [
-            { name: { $regex: search, $options: 'i' } },
+            { firstName: { $regex: search, $options: 'i' } },
+            { lastName: { $regex: search, $options: 'i' } },
             { email: { $regex: search, $options: 'i' } }
           ]
         }
@@ -72,11 +73,11 @@ export async function POST(request: NextRequest) {
 
     await connectDB()
     
-    const { name, email, password, role } = await request.json()
+    const { firstName, lastName, email, password, role } = await request.json()
 
-    if (!name || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       return NextResponse.json(
-        { error: 'Nom, email et mot de passe requis' },
+        { error: 'Prénom, nom, email et mot de passe requis' },
         { status: 400 }
       )
     }
@@ -90,7 +91,8 @@ export async function POST(request: NextRequest) {
     }
 
     const user = new User({
-      name,
+      firstName,
+      lastName,
       email,
       password,
       role: role || 'user'

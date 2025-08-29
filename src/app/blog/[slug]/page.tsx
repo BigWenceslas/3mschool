@@ -13,7 +13,7 @@ interface BlogPost {
   author: {
     firstName: string
     lastName: string
-  }
+  } | null
   slug: string
   tags: string[]
   publishedAt: string
@@ -29,7 +29,7 @@ interface Comment {
   author: {
     firstName: string
     lastName: string
-  }
+  } | null
   createdAt: string
   replies?: Comment[]
 }
@@ -258,7 +258,7 @@ export default function BlogPostPage() {
                 <div className="flex items-center">
                   <User size={16} className="mr-2" />
                   <span className="font-medium">
-                    {post.author.firstName} {post.author.lastName}
+                    {post.author ? `${post.author.firstName} ${post.author.lastName}` : 'Auteur anonyme'}
                   </span>
                 </div>
                 <div className="flex items-center">
@@ -339,12 +339,12 @@ export default function BlogPostPage() {
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
                           <span className="text-white font-bold text-sm">
-                            {comment.author.firstName.charAt(0).toUpperCase()}
+                            {comment.author ? comment.author.firstName.charAt(0).toUpperCase() : 'A'}
                           </span>
                         </div>
                         <div>
                           <div className="font-medium text-white">
-                            {comment.author.firstName} {comment.author.lastName}
+                            {comment.author ? `${comment.author.firstName} ${comment.author.lastName}` : 'Auteur anonyme'}
                           </div>
                           <div className="text-sm text-slate-400">
                             {formatDate(comment.createdAt)}

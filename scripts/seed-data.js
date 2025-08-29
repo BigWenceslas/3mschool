@@ -12,11 +12,17 @@ const userSchema = new mongoose.Schema({
     trim: true,
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
   },
-  name: {
+  firstName: {
     type: String,
-    required: [true, 'Name is required'],
+    required: [true, 'First name is required'],
     trim: true,
-    maxlength: [50, 'Name cannot exceed 50 characters']
+    maxlength: [25, 'First name cannot exceed 25 characters']
+  },
+  lastName: {
+    type: String,
+    required: [true, 'Last name is required'],
+    trim: true,
+    maxlength: [25, 'Last name cannot exceed 25 characters']
   },
   password: {
     type: String,
@@ -148,8 +154,10 @@ const courseSchema = new mongoose.Schema({
   },
   maxParticipants: {
     type: Number,
-    required: [true, 'Le nombre maximum de participants est requis'],
-    min: [1, 'Il doit y avoir au moins 1 participant maximum']
+    required: false,
+    min: [1, 'Il faut au minimum 1 participant'],
+    max: [1000, 'Maximum 1000 participants'],
+    default: 1000
   },
   instructor: {
     type: mongoose.Schema.Types.ObjectId,
@@ -232,13 +240,13 @@ const seedUsers = async () => {
     
     console.log('🌱 Début du seeding des utilisateurs...')
     
-    // Supprimer les utilisateurs existants
-    await User.deleteMany({})
-    console.log('🗑️ Utilisateurs existants supprimés')
+    // Note: Les utilisateurs sont déjà supprimés par clearDatabase()
+    console.log('🗑️ Utilisateurs déjà supprimés par le nettoyage global')
     
     // Créer l'admin par défaut
     const adminUser = {
-      name: 'Administrateur Principal',
+      firstName: 'Administrateur',
+      lastName: 'Principal',
       email: 'admin@3mages.com',
       password: 'admin123',
       role: 'admin',
@@ -248,70 +256,80 @@ const seedUsers = async () => {
     // Créer 10 utilisateurs de test
     const testUsers = [
       {
-        name: 'Marie Dubois',
+        firstName: 'Marie',
+        lastName: 'Dubois',
         email: 'marie.dubois@example.com',
         password: 'password123',
         role: 'user',
         isActive: true
       },
       {
-        name: 'Pierre Martin',
+        firstName: 'Pierre',
+        lastName: 'Martin',
         email: 'pierre.martin@example.com',
         password: 'password123',
         role: 'moderator',
         isActive: true
       },
       {
-        name: 'Sophie Leroy',
+        firstName: 'Sophie',
+        lastName: 'Leroy',
         email: 'sophie.leroy@example.com',
         password: 'password123',
         role: 'user',
         isActive: true
       },
       {
-        name: 'Jean Moreau',
+        firstName: 'Jean',
+        lastName: 'Moreau',
         email: 'jean.moreau@example.com',
         password: 'password123',
         role: 'user',
         isActive: false
       },
       {
-        name: 'Claire Simon',
+        firstName: 'Claire',
+        lastName: 'Simon',
         email: 'claire.simon@example.com',
         password: 'password123',
         role: 'moderator',
         isActive: true
       },
       {
-        name: 'Michel Laurent',
+        firstName: 'Michel',
+        lastName: 'Laurent',
         email: 'michel.laurent@example.com',
         password: 'password123',
         role: 'user',
         isActive: true
       },
       {
-        name: 'Anne Petit',
+        firstName: 'Anne',
+        lastName: 'Petit',
         email: 'anne.petit@example.com',
         password: 'password123',
         role: 'user',
         isActive: true
       },
       {
-        name: 'Philippe Roux',
+        firstName: 'Philippe',
+        lastName: 'Roux',
         email: 'philippe.roux@example.com',
         password: 'password123',
         role: 'moderator',
         isActive: false
       },
       {
-        name: 'Nathalie Bernard',
+        firstName: 'Nathalie',
+        lastName: 'Bernard',
         email: 'nathalie.bernard@example.com',
         password: 'password123',
         role: 'user',
         isActive: true
       },
       {
-        name: 'François Girard',
+        firstName: 'François',
+        lastName: 'Girard',
         email: 'francois.girard@example.com',
         password: 'password123',
         role: 'user',
@@ -341,9 +359,8 @@ const seedRoles = async () => {
     
     console.log('🌱 Début du seeding des rôles...')
     
-    // Supprimer les rôles existants
-    await Role.deleteMany({})
-    console.log('🗑️ Rôles existants supprimés')
+    // Note: Les rôles sont déjà supprimés par clearDatabase()
+    console.log('🗑️ Rôles déjà supprimés par le nettoyage global')
     
     // Créer les rôles par défaut
     const defaultRoles = [
@@ -458,9 +475,8 @@ const seedCourses = async () => {
     
     console.log('🌱 Début du seeding des cours...')
     
-    // Supprimer les cours existants
-    await Course.deleteMany({})
-    console.log('🗑️ Cours existants supprimés')
+    // Note: Les cours et inscriptions sont déjà supprimés par clearDatabase()
+    console.log('🗑️ Cours et inscriptions déjà supprimés par le nettoyage global')
     
     // Récupérer l'admin comme instructeur
     const admin = await User.findOne({ email: 'admin@3mages.com' })
@@ -500,16 +516,39 @@ const seedCourses = async () => {
       duration: 120, // 2 heures
       location: 'Sanctuaire des 3 Mages - Salle de Méditation',
       price: 1000, // XAF
-      maxParticipants: 15,
       instructor: admin._id,
       status: 'planned'
     }))
     
-    await Course.create(courses)
+    const createdCourses = await Course.create(courses)
     console.log(`📚 ${courses.length} cours créés pour les prochains dimanches`)
     
+    // Auto-enroll all users in each course
+    const allUsers = await User.find({ isActive: true })
+    console.log(`👥 Inscription automatique de ${allUsers.length} utilisateurs actifs...`)
+    
+    const enrollments = []
+    for (const course of createdCourses) {
+      for (const user of allUsers) {
+        enrollments.push({
+          courseId: course._id,
+          userId: user._id,
+          enrolledAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000), // Enrolled in last 7 days
+          attended: Math.random() > 0.3, // 70% chance of attendance
+          paymentStatus: ['paid', 'pending', 'exempted'][Math.floor(Math.random() * 3)],
+          paymentDate: Math.random() > 0.5 ? new Date() : undefined,
+          paymentMethod: Math.random() > 0.5 ? ['cash', 'mobile_money', 'bank_transfer'][Math.floor(Math.random() * 3)] : undefined,
+          paymentReference: Math.random() > 0.5 ? `REF-${Math.random().toString(36).substr(2, 9).toUpperCase()}` : undefined,
+          notes: Math.random() > 0.7 ? 'Participant très engagé dans les discussions spirituelles' : undefined
+        })
+      }
+    }
+    
+    await Enrollment.create(enrollments)
+    console.log(`✅ ${enrollments.length} inscriptions créées automatiquement`)
+    
     console.log('✅ Seeding des cours terminé avec succès!')
-    return await Course.find().populate('instructor', 'name email')
+    return await Course.find().populate('instructor', 'firstName lastName email')
     
   } catch (error) {
     console.error('❌ Erreur lors du seeding des cours:', error)
@@ -574,14 +613,43 @@ const seedEnrollments = async () => {
   }
 }
 
+const clearDatabase = async () => {
+  try {
+    await connectDB()
+    
+    console.log('🗑️ Nettoyage complet de la base de données...')
+    
+    // Clear all collections
+    const collections = ['users', 'roles', 'courses', 'enrollments', 'blogposts', 'spiritualgoals', 'journalentries', 'annualregistrations', 'expenses', 'payments']
+    
+    for (const collectionName of collections) {
+      try {
+        await mongoose.connection.db.collection(collectionName).deleteMany({})
+        console.log(`✅ Collection '${collectionName}' vidée`)
+      } catch (error) {
+        // Collection might not exist, ignore the error
+        console.log(`⚠️ Collection '${collectionName}' n'existe pas ou est déjà vide`)
+      }
+    }
+    
+    console.log('✅ Base de données complètement nettoyée!')
+    
+  } catch (error) {
+    console.error('❌ Erreur lors du nettoyage de la base de données:', error)
+    throw error
+  }
+}
+
 const seedAll = async () => {
   try {
     console.log('🚀 Début du seeding complet...')
     
+    // Clear entire database first
+    await clearDatabase()
+    
     await seedUsers()
     await seedRoles()
-    await seedCourses()
-    await seedEnrollments()
+    await seedCourses() // Now includes auto-enrollment
     
     console.log('🎉 Seeding complet terminé avec succès!')
     console.log('')
@@ -590,7 +658,8 @@ const seedAll = async () => {
     console.log('   Mot de passe: admin123')
     console.log('')
     console.log('📅 5 cours programmés pour les prochains dimanches à 10h00')
-    console.log('👥 Inscriptions et présences aléatoires générées')
+    console.log('👥 Tous les utilisateurs actifs inscrits automatiquement à chaque cours')
+    console.log('✅ Présences et paiements générés aléatoirement')
     console.log('')
     
     process.exit(0)
@@ -605,7 +674,9 @@ const seedAll = async () => {
 if (require.main === module) {
   const args = process.argv.slice(2)
   
-  if (args.includes('--users-only')) {
+  if (args.includes('--clear-only')) {
+    clearDatabase()
+  } else if (args.includes('--users-only')) {
     seedUsers()
   } else if (args.includes('--roles-only')) {
     seedRoles()
@@ -618,4 +689,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { seedUsers, seedRoles, seedCourses, seedEnrollments, seedAll }
+module.exports = { clearDatabase, seedUsers, seedRoles, seedCourses, seedEnrollments, seedAll }

@@ -53,9 +53,10 @@ const courseSchema = new mongoose.Schema<ICourse>(
     },
     maxParticipants: {
       type: Number,
-      required: [true, 'Le nombre maximum de participants est requis'],
+      required: false,
       min: [1, 'Il faut au minimum 1 participant'],
-      max: [100, 'Maximum 100 participants']
+      max: [1000, 'Maximum 1000 participants'],
+      default: 1000
     },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
@@ -89,12 +90,12 @@ courseSchema.index({ date: 1, status: 1 })
 courseSchema.index({ instructor: 1 })
 
 // Middleware pour mettre à jour automatiquement le statut avant les requêtes find
-courseSchema.pre(/^find/, function() {
+courseSchema.pre(/^find/, async function() {
   // Cette fonction sera appelée avant toute requête find
   const now = new Date()
   
   // Mettre à jour les cours planifiés qui sont maintenant en cours
-  this.updateMany(
+  await this.model.updateMany(
     { 
       status: 'planned',
       $and: [
@@ -106,7 +107,7 @@ courseSchema.pre(/^find/, function() {
   )
   
   // Mettre à jour les cours en cours ou planifiés qui sont maintenant terminés  
-  this.updateMany(
+  await this.model.updateMany(
     { 
       $and: [
         { status: { $in: ['planned', 'ongoing'] } },

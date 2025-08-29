@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs'
 
 export interface IUser extends mongoose.Document {
   email: string
-  name: string
+  firstName: string
+  lastName: string
   password: string
   role: 'admin' | 'user' | 'moderator'
   avatar?: string
@@ -23,11 +24,17 @@ const userSchema = new mongoose.Schema<IUser>(
       trim: true,
       match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
     },
-    name: {
+    firstName: {
       type: String,
-      required: [true, 'Name is required'],
+      required: [true, 'First name is required'],
       trim: true,
-      maxlength: [50, 'Name cannot exceed 50 characters']
+      maxlength: [25, 'First name cannot exceed 25 characters']
+    },
+    lastName: {
+      type: String,
+      required: [true, 'Last name is required'],
+      trim: true,
+      maxlength: [25, 'Last name cannot exceed 25 characters']
     },
     password: {
       type: String,

@@ -257,7 +257,7 @@ export default function Calendar({ courses, onCourseSelect, className = '' }: Ca
                         <div className="flex items-center space-x-2">
                           <User size={14} />
                           <span>
-                            {course.instructor.firstName} {course.instructor.lastName}
+                            {course.instructor?.firstName || ''} {course.instructor?.lastName || ''}
                           </span>
                         </div>
                       </div>

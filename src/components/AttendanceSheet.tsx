@@ -51,10 +51,12 @@ export default function AttendanceSheet({ course, students, onSave, loading = fa
     setAttendanceData(students)
   }, [students])
 
-  const filteredStudents = attendanceData.filter(student =>
-    `${student.userId.firstName} ${student.userId.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.userId.email.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredStudents = attendanceData.filter(student => {
+    const fullName = student.userId ? `${student.userId.firstName || ''} ${student.userId.lastName || ''}` : ''
+    const email = student.userId?.email || ''
+    return fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           email.toLowerCase().includes(searchTerm.toLowerCase())
+  })
 
   const updateStudentAttendance = (studentId: string, field: string, value: any) => {
     setAttendanceData(prev =>
@@ -176,7 +178,7 @@ export default function AttendanceSheet({ course, students, onSave, loading = fa
             <div className="flex items-center space-x-2 mt-2">
               <User size={16} />
               <span className="text-sm text-gray-600">
-                Instructeur: {course.instructor.firstName} {course.instructor.lastName}
+                Instructeur: {course.instructor?.firstName || ''} {course.instructor?.lastName || ''}
               </span>
             </div>
           </div>
@@ -241,9 +243,9 @@ export default function AttendanceSheet({ course, students, onSave, loading = fa
                   </div>
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">
-                      {student.userId.firstName} {student.userId.lastName}
+                      {student.userId?.firstName || ''} {student.userId?.lastName || ''}
                     </h3>
-                    <p className="text-sm text-gray-500">{student.userId.email}</p>
+                    <p className="text-sm text-gray-500">{student.userId?.email || ''}</p>
                   </div>
                 </div>
               </div>

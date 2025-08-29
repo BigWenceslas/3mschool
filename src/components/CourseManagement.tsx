@@ -100,7 +100,6 @@ export default function CourseManagement() {
     date: '',
     duration: 120,
     location: '',
-    maxParticipants: 30,
     price: 1000
   })
 
@@ -205,14 +204,21 @@ export default function CourseManagement() {
       date: new Date(course.date).toISOString().slice(0, 16), // Format datetime-local
       duration: course.duration,
       location: course.location,
-      maxParticipants: course.maxParticipants,
       price: course.price
     })
     setOpenDialog(true)
   }
 
   const handleDeleteCourse = async (courseId: string) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')) {
+    // Find the course to get enrollment count
+    const course = courses.find(c => c._id === courseId)
+    const enrollmentCount = course?.enrollmentCount || 0
+    
+    const warningMessage = enrollmentCount > 0 
+      ? `⚠️ ATTENTION: Ce cours a ${enrollmentCount} inscription(s).\n\nSupprimer ce cours va automatiquement:\n• Supprimer le cours\n• Supprimer toutes les ${enrollmentCount} inscription(s) associée(s)\n• Effacer l'historique des présences et paiements\n\nCette action est IRRÉVERSIBLE.\n\nÊtes-vous sûr de vouloir continuer ?`
+      : 'Êtes-vous sûr de vouloir supprimer ce cours ?'
+    
+    if (!window.confirm(warningMessage)) {
       return
     }
 
@@ -243,7 +249,6 @@ export default function CourseManagement() {
       date: '',
       duration: 120,
       location: '',
-      maxParticipants: 30,
       price: 1000
     })
     setEditingCourse(null)
@@ -310,9 +315,9 @@ export default function CourseManagement() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </div>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <div>
           <Card sx={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', color: 'white' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -328,9 +333,9 @@ export default function CourseManagement() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </div>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <div>
           <Card sx={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -346,9 +351,9 @@ export default function CourseManagement() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </div>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <div>
           <Card sx={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', color: 'white' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -364,9 +369,9 @@ export default function CourseManagement() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </div>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <div>
           <Card sx={{ background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', color: '#333' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -382,9 +387,9 @@ export default function CourseManagement() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </div>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <div>
           <Card sx={{ background: 'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)', color: '#333' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -400,9 +405,9 @@ export default function CourseManagement() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
+        </div>
 
-        <Grid item xs={12} sm={6} md={4}>
+        <div>
           <Card sx={{ background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', color: '#333' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -418,8 +423,8 @@ export default function CourseManagement() {
               </Box>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
 
       {/* Courses List */}
       <Card>
@@ -476,7 +481,7 @@ export default function CourseManagement() {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                       <PeopleIcon fontSize="small" color="action" />
                       <Typography variant="body2" color="text.secondary">
-                        {course.enrollmentCount}/{course.maxParticipants} inscrits
+                        {course.enrollmentCount} inscrits
                       </Typography>
                     </Box>
 
@@ -593,16 +598,6 @@ export default function CourseManagement() {
                 label="Lieu"
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Max participants"
-                value={formData.maxParticipants}
-                onChange={(e) => setFormData({ ...formData, maxParticipants: parseInt(e.target.value) })}
                 required
               />
             </Grid>

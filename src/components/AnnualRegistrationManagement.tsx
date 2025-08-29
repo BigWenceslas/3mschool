@@ -331,10 +331,10 @@ export default function AnnualRegistrationManagement() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
-                        {registration.userId.firstName} {registration.userId.lastName}
+                        {registration.userId?.firstName || ''} {registration.userId?.lastName || ''}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {registration.userId.email}
+                        {registration.userId?.email || ''}
                       </div>
                     </div>
                   </td>
@@ -404,7 +404,7 @@ export default function AnnualRegistrationManagement() {
                   <option value="">Sélectionner un utilisateur</option>
                   {users.map((user) => (
                     <option key={user._id} value={user._id}>
-                      {user.firstName} {user.lastName} - {user.email}
+                      {user?.firstName || ''} {user?.lastName || ''} - {user?.email || ''}
                     </option>
                   ))}
                 </select>

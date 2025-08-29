@@ -33,7 +33,8 @@ import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 
 interface User {
   _id: string
-  name: string
+  firstName: string
+  lastName: string
   email: string
   role: 'admin' | 'user' | 'moderator'
   isActive: boolean
@@ -42,7 +43,8 @@ interface User {
 }
 
 interface UserFormData {
-  name: string
+  firstName: string
+  lastName: string
   email: string
   password?: string
   role: 'admin' | 'user' | 'moderator'
@@ -55,7 +57,8 @@ export default function UsersManagement() {
   const [openDialog, setOpenDialog] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [formData, setFormData] = useState<UserFormData>({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     role: 'user',
@@ -89,7 +92,8 @@ export default function UsersManagement() {
     if (user) {
       setEditingUser(user)
       setFormData({
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         role: user.role,
         isActive: user.isActive,
@@ -97,7 +101,8 @@ export default function UsersManagement() {
     } else {
       setEditingUser(null)
       setFormData({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         role: 'user',
@@ -113,7 +118,8 @@ export default function UsersManagement() {
     setOpenDialog(false)
     setEditingUser(null)
     setFormData({
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
       role: 'user',
@@ -128,7 +134,7 @@ export default function UsersManagement() {
       const method = editingUser ? 'PUT' : 'POST'
       
       const body = editingUser 
-        ? { name: formData.name, email: formData.email, role: formData.role, isActive: formData.isActive }
+        ? { firstName: formData.firstName, lastName: formData.lastName, email: formData.email, role: formData.role, isActive: formData.isActive }
         : formData
 
       const response = await fetch(url, {
@@ -192,7 +198,13 @@ export default function UsersManagement() {
   }
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Nom', flex: 1, minWidth: 150 },
+    { 
+      field: 'fullName', 
+      headerName: 'Nom', 
+      flex: 1, 
+      minWidth: 150,
+      valueGetter: (value, row) => `${row.firstName} ${row.lastName}`
+    },
     { field: 'email', headerName: 'Email', flex: 1, minWidth: 200 },
     {
       field: 'role',
@@ -311,12 +323,21 @@ export default function UsersManagement() {
         </DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Prénom"
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                required
+              />
+            </Grid>
+            <Grid item xs={6}>
               <TextField
                 fullWidth
                 label="Nom"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 required
               />
             </Grid>

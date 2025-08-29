@@ -376,7 +376,7 @@ export default function BlogManagement() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <div className="flex items-center">
                       <User size={16} className="mr-2 text-gray-400" />
-                      {post.author.firstName} {post.author.lastName}
+                      {post.author?.firstName || ''} {post.author?.lastName || ''}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

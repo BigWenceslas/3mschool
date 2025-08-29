@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongodb'
 import Course from '@/lib/models/Course'
 import Enrollment from '@/lib/models/Enrollment'
+import User from '@/lib/models/User'
 import { getUserFromRequest } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
@@ -121,12 +122,11 @@ export async function POST(request: NextRequest) {
       date, 
       duration, 
       location, 
-      maxParticipants, 
       price = 1000 
     } = body
 
     // Validation des données requises
-    if (!title || !description || !date || !duration || !location || !maxParticipants) {
+    if (!title || !description || !date || !duration || !location) {
       return NextResponse.json(
         { success: false, message: 'Tous les champs obligatoires doivent être remplis' },
         { status: 400 }
@@ -148,17 +148,29 @@ export async function POST(request: NextRequest) {
       date: courseDate,
       duration,
       location,
-      maxParticipants,
       instructor: tokenData.userId,
       price
     })
 
     await course.save()
+    
+    // Auto-enroll all users in the system
+    const allUsers = await User.find({ isActive: true })
+    const enrollments = allUsers.map(user => ({
+      courseId: course._id,
+      userId: user._id,
+      enrolledAt: new Date(),
+      attended: false,
+      paymentStatus: 'pending'
+    }))
+    
+    await Enrollment.insertMany(enrollments)
+    
     await course.populate('instructor', 'name email')
 
     return NextResponse.json({
       success: true,
-      message: 'Cours créé avec succès',
+      message: `Cours créé avec succès et ${allUsers.length} utilisateurs inscrits automatiquement`,
       course: course.toObject()
     }, { status: 201 })
 

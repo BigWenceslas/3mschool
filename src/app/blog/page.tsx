@@ -9,8 +9,9 @@ interface BlogPost {
   title: string
   excerpt: string
   author: {
-    name: string
-  }
+    firstName: string
+    lastName: string
+  } | null
   slug: string
   tags: string[]
   publishedAt: string
@@ -237,7 +238,7 @@ export default function BlogPage() {
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center">
                         <User size={14} className="mr-1" />
-                        <span>{post.author.name}</span>
+                        <span>{post.author ? `${post.author.firstName} ${post.author.lastName}` : 'Auteur anonyme'}</span>
                       </div>
                       <div className="flex items-center">
                         <Clock size={14} className="mr-1" />

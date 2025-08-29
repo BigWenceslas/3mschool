@@ -58,8 +58,18 @@ blogPostSchema.pre('save', async function(next) {
 })
 
 const userSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
+  firstName: {
+    type: String,
+    required: [true, 'First name is required'],
+    trim: true,
+    maxlength: [25, 'First name cannot exceed 25 characters']
+  },
+  lastName: {
+    type: String,
+    required: [true, 'Last name is required'],
+    trim: true,
+    maxlength: [25, 'Last name cannot exceed 25 characters']
+  },
   email: String,
   role: String
 })

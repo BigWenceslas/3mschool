@@ -207,24 +207,22 @@ export async function DELETE(
       )
     }
 
-    // Vérifier s'il y a des inscriptions
+    // Vérifier s'il y a des inscriptions et les supprimer en cascade
     const enrollmentCount = await Enrollment.countDocuments({ courseId: params.id })
     
     if (enrollmentCount > 0) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          message: `Impossible de supprimer ce cours car il y a ${enrollmentCount} inscription(s)` 
-        },
-        { status: 400 }
-      )
+      // Supprimer toutes les inscriptions liées au cours
+      await Enrollment.deleteMany({ courseId: params.id })
+      console.log(`Suppression en cascade: ${enrollmentCount} inscriptions supprimées pour le cours ${params.id}`)
     }
 
     await Course.findByIdAndDelete(params.id)
 
     return NextResponse.json({
       success: true,
-      message: 'Cours supprimé avec succès'
+      message: enrollmentCount > 0 
+        ? `Cours supprimé avec succès ainsi que ${enrollmentCount} inscription(s) associée(s)`
+        : 'Cours supprimé avec succès'
     })
 
   } catch (error) {

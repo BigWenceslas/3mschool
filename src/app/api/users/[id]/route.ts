@@ -19,7 +19,7 @@ export async function PUT(
 
     await connectDB()
     
-    const { name, email, role, isActive } = await request.json()
+    const { firstName, lastName, email, role, isActive } = await request.json()
     const userId = params.id
 
     const user = await User.findById(userId)
@@ -41,7 +41,8 @@ export async function PUT(
     }
 
     const updateData: any = {}
-    if (name !== undefined) updateData.name = name
+    if (firstName !== undefined) updateData.firstName = firstName
+    if (lastName !== undefined) updateData.lastName = lastName
     if (email !== undefined) updateData.email = email
     if (role !== undefined) updateData.role = role
     if (isActive !== undefined) updateData.isActive = isActive

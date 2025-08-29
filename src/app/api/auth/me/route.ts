@@ -25,18 +25,12 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Split name into firstName and lastName for compatibility
-    const nameParts = user.name.split(' ')
-    const firstName = nameParts[0] || ''
-    const lastName = nameParts.slice(1).join(' ') || ''
-
     return NextResponse.json({
       user: {
         id: user._id,
         email: user.email,
-        name: user.name,
-        firstName,
-        lastName,
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
         role: user.role,
         avatar: user.avatar
       }

@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     }
 
     const posts = await BlogPost.find(query)
-      .populate('author', 'name email')
+      .populate('author', 'firstName lastName email')
       .sort({ publishedAt: -1, createdAt: -1 })
       .limit(limit)
       .skip(skip)
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     })
 
     await post.save()
-    await post.populate('author', 'name email')
+    await post.populate('author', 'firstName lastName email')
 
     return NextResponse.json({ 
       message: 'Article créé avec succès',
